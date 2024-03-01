@@ -9,7 +9,7 @@ import site_crawler as sc
 def grab_data(years):
     # Goes through each year and grabs teams and links
     for year, link in years.items():
-        dic = get_team_sites(link["Overview"], year)
+        dic = sc.get_team_sites(link["Overview"], year)
         years[year]["Teams"] = dic
     return years
 
@@ -24,7 +24,7 @@ def main():
              "22-23": {"Overview":"https://fbref.com/en/comps/9/2022-2023/2022-2023-Premier-League-Stats"}}
     # clubs_data = grab_data(years)
     av_data = sc.get_player_stats("https://fbref.com/en/squads/8602292d/2022-2023/Aston-Villa-Stats")
-    av_data.to_csv("help.csv")
+    av_data.to_csv("dataframe.csv")
     # print(av_data)
 
 main()
