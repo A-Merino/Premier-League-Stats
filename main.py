@@ -14,6 +14,15 @@ def grab_data(years):
     return years
 
 
+def player_db(all_clubs):
+    all_players = dict()
+    for year in all_clubs:
+        for team in all_clubs[year]["Teams"]:
+            all_players |= sc.get_all_players(all_clubs[year]["Teams"][team])
+    return all_players
+
+
+
 def main():
     # Initializes the years we want to grab data from
     years = {"17-18": {"Overview":"https://fbref.com/en/comps/9/2017-2018/2017-2018-Premier-League-Stats"},
@@ -22,9 +31,15 @@ def main():
              "20-21": {"Overview":"https://fbref.com/en/comps/9/2020-2021/2020-2021-Premier-League-Stats"},
              "21-22": {"Overview":"https://fbref.com/en/comps/9/2021-2022/2021-2022-Premier-League-Stats"},
              "22-23": {"Overview":"https://fbref.com/en/comps/9/2022-2023/2022-2023-Premier-League-Stats"}}
+
+    test = {"17-18": {"Overview":"https://fbref.com/en/comps/9/2017-2018/2017-2018-Premier-League-Stats"}}
     # clubs_data = grab_data(years)
-    av_data = sc.get_player_stats("https://fbref.com/en/squads/8602292d/2022-2023/Aston-Villa-Stats")
-    av_data.to_csv("dataframe.csv")
+    # print(clubs_data)
+    print(player_db(grab_data(test)))
+    # av_data = sc.get_player_stats("https://fbref.com/en/squads/8602292d/2022-2023/Aston-Villa-Stats")
+    # av_data.to_csv("dataframe.csv")
+    # hello = sc.get_all_players("https://fbref.com/en/squads/8602292d/2022-2023/Aston-Villa-Stats")
     # print(av_data)
+    # print(hello)
 
 main()

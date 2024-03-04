@@ -21,7 +21,7 @@ def get_team_sites(url, year):
     # Find club name and link to that season's player stats
     for row in trs:
         o = row.find_element(By.CSS_SELECTOR, "a")
-        links[o.text] = {"Main Link":o.get_attribute("href")} 
+        links[o.text] = o.get_attribute("href") 
 
     # Close web driver and return dict of clubs
     d.close()
@@ -43,3 +43,24 @@ def get_player_stats(url):
         # print(tab)
     d.close()
     return club_stats
+
+def get_all_players(url):
+    players = dict()
+    d = wd.init_club_page(url)
+    t_id = "stats_standard_9"
+    stat = d.find_element(By.ID, t_id)
+    trs = stat.find_elements(By.CSS_SELECTOR, "tr")
+    for row in trs:
+        e = row.find_elements(By.CSS_SELECTOR, "a")
+        # print(row.get_attribute("href"))
+        # print(row.find_elements(By.CSS_SELECTOR, "a"))
+        # for s in e:
+        #     q = s.get_attribute("href")
+        # print(e)
+        if len(e) != 0:
+            players[e[0].text] = e[0].get_attribute("href")
+    d.close()
+    return players
+
+def player_tm(url):
+    d = wd.init_tm_page(url)
