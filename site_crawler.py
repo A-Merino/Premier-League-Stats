@@ -13,7 +13,7 @@ def get_team_sites(url, year):
     ids = "".join(("results20", f, "-20", s, "91_overall"))
 
     # Create web driver and find season table
-    d = wd.init_league_page(url, ids)
+    d = wd.init_loaded_page_id(url, ids)
     table = d.find_element(By.ID, ids)
     bod = table.find_element(By.CSS_SELECTOR, "tbody")
     trs = bod.find_elements(By.CSS_SELECTOR, "tr")
@@ -34,33 +34,44 @@ def get_player_stats(url):
             "stats_passing_types_9", "stats_gca_9", "stats_defense_9",
             "stats_possession_9", "stats_playing_time_9", "stats_misc_9",
             "stats_keeper_9", "stats_keeper_adv_9"]
-    d = wd.init_club_page(url)
+    d = wd.init_loaded_page_id(url, "stats_misc_9")
     club_stats = pd.DataFrame()
     for tab in tables:
         tb.table_cleaner(d.find_element(By.ID, tab).text)
         club_stats = tb.table_joiner(club_stats)
-        # t.find_element(By.CLASS_NAME, " poptip sort_default_asc left").click()
-        # print(tab)
     d.close()
     return club_stats
 
-def get_all_players(url):
+
+# Function that grabs all the players from one club page
+def get_all_players(url, found):
+    # initialize dictionary and web page
     players = dict()
-    d = wd.init_club_page(url)
+    d = wd.init_loaded_page_id(url, "stats_misc_9")
     t_id = "stats_standard_9"
+
+    # Traverse page to find table with all players
     stat = d.find_element(By.ID, t_id)
     trs = stat.find_elements(By.CSS_SELECTOR, "tr")
+
+    # Go through each row and grab player and link to them 
     for row in trs:
         e = row.find_elements(By.CSS_SELECTOR, "a")
-        # print(row.get_attribute("href"))
-        # print(row.find_elements(By.CSS_SELECTOR, "a"))
-        # for s in e:
-        #     q = s.get_attribute("href")
-        # print(e)
-        if len(e) != 0:
-            players[e[0].text] = e[0].get_attribute("href")
+        if len(e) != 0 and e[0].text not in found:
+            players[e[0].text] = get_player_tm(e[0].get_attribute("href"))
+            found.append(e[0].text)
     d.close()
-    return players
+    return players, found
 
-def player_tm(url):
-    d = wd.init_tm_page(url)
+
+def get_player_tm(url):
+    new_link = ""
+    d = wd.init_loaded_page_id(url, "div_resources_other")
+    ext_links = d.find_element(By.ID, "div_resources_other")
+    for link in ext_links.find_elements(By.CSS_SELECTOR, "a"):
+        if link.text.find("markt") != -1:
+            new_link = link.get_attribute("href").replace("profil", "marktwertverlauf")
+            break
+
+    d.close()
+    return new_link
