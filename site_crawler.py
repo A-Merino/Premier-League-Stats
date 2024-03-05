@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException
 
 
 def get_team_sites(url, year):
@@ -44,7 +45,7 @@ def get_player_stats(url):
 
 
 # Function that grabs all the players from one club page
-def get_all_players(url, found):
+def get_all_players(url, players):
     # initialize dictionary and web page
     players = dict()
     d = wd.init_loaded_page_id(url, "stats_misc_9")
@@ -57,21 +58,26 @@ def get_all_players(url, found):
     # Go through each row and grab player and link to them 
     for row in trs:
         e = row.find_elements(By.CSS_SELECTOR, "a")
-        if len(e) != 0 and e[0].text not in found:
+        if len(e) != 0 and e[0].text not in players.keys():
             players[e[0].text] = get_player_tm(e[0].get_attribute("href"))
-            found.append(e[0].text)
     d.close()
-    return players, found
+    return players
 
 
 def get_player_tm(url):
     new_link = ""
     d = wd.init_loaded_page_id(url, "div_resources_other")
-    ext_links = d.find_element(By.ID, "div_resources_other")
-    for link in ext_links.find_elements(By.CSS_SELECTOR, "a"):
-        if link.text.find("markt") != -1:
-            new_link = link.get_attribute("href").replace("profil", "marktwertverlauf")
-            break
+    try:
+        ext_links = d.find_element(By.ID, "div_resources_other")
+    except NoSuchElementException as e:
+        d.close()
+        return ""
+    else:
+        ext_links = d.find_element(By.ID, "div_resources_other")
+        for link in ext_links.find_elements(By.CSS_SELECTOR, "a"):
+            if link.text.find("markt") != -1:
+                new_link = link.get_attribute("href").replace("profil", "marktwertverlauf")
+                break
 
     d.close()
     return new_link
