@@ -31,14 +31,20 @@ def main():
              "21-22": {"Overview":"https://fbref.com/en/comps/9/2021-2022/2021-2022-Premier-League-Stats"},
              "22-23": {"Overview":"https://fbref.com/en/comps/9/2022-2023/2022-2023-Premier-League-Stats"}}
 
-    # test = {"17-18": {"Overview":"https://fbref.com/en/comps/9/2017-2018/2017-2018-Premier-League-Stats"}}
-    # test2 = {"17-18": {"Overview":"https://fbref.com/en/comps/9/2017-2018/2017-2018-Premier-League-Stats", "Teams":{"Manchester City":"https://fbref.com/en/squads/b8fd03ef/2018-2019/Manchester-City-Stats"}}}
 
     ap = player_db(grab_data(years))
     pd.DataFrame(ap.items()).to_csv("players.csv")
 
-    # aa = player_db(test2)
-    # pd.DataFrame(aa.items()).to_csv("players_test.csv")
+    # print(f.iloc[0,1])
+    # f = pd.read_csv("players_test.csv")
+    # dd = dict()
+    # for i in range(f.shape[0]):
+    #     dd[f.iloc[i, 1]] = f.iloc[i, 2]
+    # print(dd)
+
+
+    aa = player_db(test2)
+    pd.DataFrame(aa.items()).to_csv("players_test2.csv")
 
     # clubs_data = grab_data(years)
     # print(clubs_data)

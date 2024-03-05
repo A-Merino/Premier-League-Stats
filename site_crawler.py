@@ -47,7 +47,6 @@ def get_player_stats(url):
 # Function that grabs all the players from one club page
 def get_all_players(url, players):
     # initialize dictionary and web page
-    players = dict()
     d = wd.init_loaded_page_id(url, "stats_misc_9")
     t_id = "stats_standard_9"
 
