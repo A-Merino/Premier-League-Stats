@@ -16,10 +16,11 @@ def grab_data(years):
 
 
 def player_db(all_clubs):
-    all_players = dict()
+    all_players = pd.read_csv("players.csv").to_dict()
     for year in all_clubs:
         for team in all_clubs[year]["Teams"]:
             all_players = sc.get_all_players(all_clubs[year]["Teams"][team], all_players)
+            pd.DataFrame(all_players.items()).to_csv("players.csv")
     return all_players
 
 def main():
@@ -32,8 +33,21 @@ def main():
              "22-23": {"Overview":"https://fbref.com/en/comps/9/2022-2023/2022-2023-Premier-League-Stats"}}
 
 
-    ap = player_db(grab_data(years))
-    pd.DataFrame(ap.items()).to_csv("players.csv")
+    teams = pd.read_csv("teams.csv", header=None)
+    
+    players = pd.read_csv("players.csv", header=None).drop(0, axis=1).drop(0).to_dict("list")
+    # print(pd.read_csv("players.csv", header=None).drop(0, axis=1).drop(0).to_dict("list"))
+    all_players = dict()
+    for p,l in zip(players[1],players[2]):
+        all_players[p] = l
+
+    # print(all_players)
+    for team in teams.iloc[:,1]:
+        all_players = sc.get_all_players(team, all_players)
+        pd.DataFrame(all_players.items()).to_csv("players.csv")
+
+    # ap = player_db(grab_data(years))
+    # pd.DataFrame(ap.items()).to_csv("players.csv")
 
     # print(f.iloc[0,1])
     # f = pd.read_csv("players_test.csv")
@@ -43,8 +57,8 @@ def main():
     # print(dd)
 
 
-    aa = player_db(test2)
-    pd.DataFrame(aa.items()).to_csv("players_test2.csv")
+    # aa = player_db(test2)
+    # pd.DataFrame(aa.items()).to_csv("players_test2.csv")
 
     # clubs_data = grab_data(years)
     # print(clubs_data)

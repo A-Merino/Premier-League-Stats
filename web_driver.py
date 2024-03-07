@@ -26,21 +26,21 @@ def init_loaded_page_class(url, clas):
 
 def wait_id(driver, ids):
     try:
-        el = WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.ID,ids)))
+        el = WebDriverWait(driver, 2).until(EC.presence_of_element_located((By.ID,ids)))
     finally:
         return driver
 
 
 def wait_class(driver, clas):
     try:
-        el = WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.CLASS_NAME,clas)))
+        el = WebDriverWait(driver, 2).until(EC.presence_of_element_located((By.CLASS_NAME,clas)))
     finally:
         return driver
 
 
 def wait_part_link(driver, part):
     try:
-        el = WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.PARTIAL_LINK_TEXT,part)))
+        el = WebDriverWait(driver, 2).until(EC.presence_of_element_located((By.PARTIAL_LINK_TEXT,part)))
     finally:
         return driver
 
