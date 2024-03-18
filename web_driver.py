@@ -46,3 +46,7 @@ def wait_part_link(driver, part):
 
 def init_main_driver():
     return webdriver.Firefox()
+
+def get_all_tms(d, link):
+    d.find_element(By.CLASS_NAME, "hydrated").send_keys(Keys.CONTROL + 't')
+    d.get(link)
