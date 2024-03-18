@@ -35,12 +35,23 @@ def main():
 
     # teams = pd.read_csv("teams.csv", header=None)
     
+<<<<<<< HEAD
     # players = pd.read_csv("players.csv", header=None).drop(0, axis=1).drop(0).to_dict("list")
+=======
+    players = pd.read_csv("players.csv", header=None)
+>>>>>>> 39f4f6b50cc5918fcd2fa90522afc93dcab04080
     # # print(pd.read_csv("players.csv", header=None).drop(0, axis=1).drop(0).to_dict("list"))
     # all_players = dict()
     # for p,l in zip(players[1],players[2]):
     #     all_players[p] = l
 
+<<<<<<< HEAD
+=======
+    d = wd.init_main_driver() 
+    for p in players.iloc[1:,2]:
+        wd.get_all_tms(d, p)
+        # d.implicitly_wait(100) 
+>>>>>>> 39f4f6b50cc5918fcd2fa90522afc93dcab04080
     # # print(all_players)
     # for team in teams.iloc[:,1]:
     #     all_players = sc.get_all_players(team, all_players)
