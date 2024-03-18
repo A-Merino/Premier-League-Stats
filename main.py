@@ -33,18 +33,18 @@ def main():
              "22-23": {"Overview":"https://fbref.com/en/comps/9/2022-2023/2022-2023-Premier-League-Stats"}}
 
 
-    teams = pd.read_csv("teams.csv", header=None)
+    # teams = pd.read_csv("teams.csv", header=None)
     
-    players = pd.read_csv("players.csv", header=None).drop(0, axis=1).drop(0).to_dict("list")
-    # print(pd.read_csv("players.csv", header=None).drop(0, axis=1).drop(0).to_dict("list"))
-    all_players = dict()
-    for p,l in zip(players[1],players[2]):
-        all_players[p] = l
+    # players = pd.read_csv("players.csv", header=None).drop(0, axis=1).drop(0).to_dict("list")
+    # # print(pd.read_csv("players.csv", header=None).drop(0, axis=1).drop(0).to_dict("list"))
+    # all_players = dict()
+    # for p,l in zip(players[1],players[2]):
+    #     all_players[p] = l
 
-    # print(all_players)
-    for team in teams.iloc[:,1]:
-        all_players = sc.get_all_players(team, all_players)
-        pd.DataFrame(all_players.items()).to_csv("players.csv")
+    # # print(all_players)
+    # for team in teams.iloc[:,1]:
+    #     all_players = sc.get_all_players(team, all_players)
+    #     pd.DataFrame(all_players.items()).to_csv("players.csv")
 
     # ap = player_db(grab_data(years))
     # pd.DataFrame(ap.items()).to_csv("players.csv")
@@ -65,13 +65,9 @@ def main():
 
     # print(player_db(grab_data(test)))
 
-    # av_data = sc.get_player_stats("https://fbref.com/en/squads/8602292d/2022-2023/Aston-Villa-Stats")
-    # av_data.to_csv("dataframe.csv")
-    # print(av_data)
+    av_data = sc.get_player_stats("https://fbref.com/en/squads/8602292d/2022-2023/Aston-Villa-Stats")
+    av_data.to_csv("dataframe.csv")
+    print(av_data)
 
-    # hello = sc.get_all_players("https://fbref.com/en/squads/8602292d/2022-2023/Aston-Villa-Stats")
-    # print(hello)
-
-    # sc.get_player_tm('https://fbref.com/en/players/819b3158/Ilkay-Gundogan')
 
 main()

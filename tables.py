@@ -42,7 +42,7 @@ def table_cleaner(table):
 
 
 def table_joiner(df):
-    table = pd.read_csv("tab.csv", encoding="latin1")
+    table = pd.read_csv("tab.csv")
     table = table.iloc[:-2,:]
     if df.empty:
         return table
