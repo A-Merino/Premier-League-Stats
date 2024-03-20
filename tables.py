@@ -1,14 +1,15 @@
 import csv
 import pandas as pd
 import numpy as np
+import os
 
 
-def table_cleaner(table):
+def table_cleaner(table, dest, tab):
     # excludes the top rows of the tables
     ex = ["Playing","Standard" , "Goals", "Total", "Pass", "SCA", "Tackles", "Touches", "Performance"]
-    
+    path = dest + os.sep + tab + ".csv"
     # open a new csv file with a writer
-    with open("tab.csv", "w") as file:
+    with open(path, "w", encoding='utf-32') as file:
         writ = csv.writer(file, delimiter=",")
 
         for i, line in enumerate(table.split("\n")):
@@ -42,10 +43,11 @@ def table_cleaner(table):
 
 
 def table_joiner(df):
-    table = pd.read_csv("tab.csv")
+    table = pd.read_csv("tab.csv", encoding="latin")
     table = table.iloc[:-2,:]
     if df.empty:
         return table
-    return pd.concat([table, df])
+    table = table.iloc[:,3:]
+    return pd.concat([df, table], axis=1)
     # return pd.merge(table, df, how="left")
 

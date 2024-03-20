@@ -5,6 +5,8 @@ import numpy as np
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
+import os
+import glob
 
 
 def get_team_sites(url, year):
@@ -30,6 +32,7 @@ def get_team_sites(url, year):
 
 
 def get_player_stats(url):
+    dest = f_path(url)
     players = dict()
     tables = ["stats_standard_9", "stats_shooting_9", "stats_passing_9",
             "stats_passing_types_9", "stats_gca_9", "stats_defense_9",
@@ -38,10 +41,19 @@ def get_player_stats(url):
     d = wd.init_loaded_page_id(url, "stats_misc_9")
     club_stats = pd.DataFrame()
     for tab in tables:
-        tb.table_cleaner(d.find_element(By.ID, tab).text)
-        club_stats = tb.table_joiner(club_stats)
+        tb.table_cleaner(d.find_element(By.ID, tab).text, dest, tab.split("_")[-2])
+        # club_stats = tb.table_joiner(club_stats)
     d.close()
-    return club_stats
+    # return club_stats
+
+
+def f_path(url):
+    year, team = url.split("/")[-2:]
+    team = "_".join(team.split("-")[:-1])
+    path = "player_data" + os.sep + year + os.sep + team
+    if not os.path.isdir(path):
+        os.mkdir(path)
+    return(path)
 
 
 # Function that grabs all the players from one club page
