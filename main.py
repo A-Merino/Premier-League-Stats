@@ -30,6 +30,10 @@ def team_stats(teams):
     for team in teams.iloc[:,-1]:
         sc.get_player_stats(team)
 
+def reform(files):
+    for f in files:
+        table = pd.read_csv(file, encoding="utf-32")
+        table.iloc[:2,:].to_csv("asdf.csv")
 
 
 def main():
@@ -42,9 +46,12 @@ def main():
              "22-23": {"Overview":"https://fbref.com/en/comps/9/2022-2023/2022-2023-Premier-League-Stats"}}
 
     
-    team_stats(pd.read_csv("tt.csv").iloc[:,1:])
+    # file = "player_data" + os.sep + "2017-2018" + os.sep + "Arsenal" + os.sep + "standard.csv"
+    # table = pd.read_csv(file, encoding="utf-32").iloc[:-2,:]
+    # table.to_csv("asdf.csv", encoding="utf-32")
 
-    # os.remove("tab.csv")
+    # filepaths = glob.glob("player_data/*/*/*")
+    # print(table)
 
 
     # sc.f_path("https://fbref.com/en/squads/8602292d/2022-2023/Aston-Villa-Stats")
