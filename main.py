@@ -32,8 +32,36 @@ def team_stats(teams):
 
 def reform(files):
     for f in files:
-        table = pd.read_csv(file, encoding="utf-32")
-        table.iloc[:2,:].to_csv("asdf.csv")
+        with open(f, "r", encoding="utf-32") as g:
+            for line in g:
+                print(line)
+        # t = f.split("\\")[-1]
+        # print(t)
+        # table = pd.read_csv(f, encoding="latin", sep=",")
+        # table.iloc[:-2,:].to_csv(f, sep=",")
+
+
+
+def combtable(folder, file):
+    # folder = folder[1:]
+    players = []
+    for f in reversed(folder):
+        print(f)
+        try:
+            one = pd.read_csv(f, on_bad_lines='skip')
+        except Exception as e:
+            one = pd.read_csv(f, encoding="latin", on_bad_lines='skip')
+        else:
+            pass
+        finally:
+            pass
+            # print(one)
+        for i in range(one.shape[0]):
+            
+            players.append(list(one.iloc[i,:].values))
+
+
+    pd.DataFrame.from_records(players).to_csv(file +"/all.csv")
 
 
 def main():
@@ -49,10 +77,18 @@ def main():
     # file = "player_data" + os.sep + "2017-2018" + os.sep + "Arsenal" + os.sep + "standard.csv"
     # table = pd.read_csv(file, encoding="utf-32").iloc[:-2,:]
     # table.to_csv("asdf.csv", encoding="utf-32")
+    rf = "player_data/allteams/"
+    filepaths = glob.glob("player_data/*/*/all.csv")
+    for file in filepaths:
+        # subs = glob.glob(file + "/*")
+        out = file.split("\\")[2] + file.split("\\")[1] + file[-4:]
+        # combtable(subs, file)
+        # for s in subs:
+        #     print(s)
+        os.rename(file, rf + out)
+        print(file)
 
-    # filepaths = glob.glob("player_data/*/*/*")
-    # print(table)
-
+    # reform(glob.glob("player_data/2021-2022/Southampton/*"))
 
     # sc.f_path("https://fbref.com/en/squads/8602292d/2022-2023/Aston-Villa-Stats")
 
