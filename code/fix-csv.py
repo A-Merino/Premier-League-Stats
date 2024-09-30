@@ -22,7 +22,7 @@ def dropRows():
         df.to_csv(nf)
 
 
-files = glob('player_data\\allteams\\*')
+files = glob('player_data\\*')
 for f in files:
     if 'csv' in f:
         df = pd.read_csv(f)
