@@ -31,7 +31,7 @@ standard_stats = ["player",
 
 goal_site = "https://fbref.com/en/comps/9/2023-2024/keepers/2023-2024-Premier-League-Stats"
 goal_id = "stats_keeper"
-goal_stats = ["gk_goals_against",
+goal_stats = ["player","gk_goals_against",
 "gk_shots_on_target_against",
 "gk_saves",
 "gk_wins",
@@ -47,7 +47,7 @@ goal_stats = ["gk_goals_against",
 
 adgoal_site = "https://fbref.com/en/comps/9/2023-2024/keepersadv/2023-2024-Premier-League-Stats"
 adgoal_id = "stats_keeper_adv"
-adgoal_stats = ["gk_free_kick_goals_against",
+adgoal_stats = ["player","gk_free_kick_goals_against",
 "gk_corner_kick_goals_against",
 "gk_psxg",
 "gk_psnpxg_per_shot_on_target_against",
@@ -67,7 +67,7 @@ adgoal_stats = ["gk_free_kick_goals_against",
 
 shot_site = "https://fbref.com/en/comps/9/2023-2024/shooting/2023-2024-Premier-League-Stats"
 shot_id = "stats_shooting"
-shot_stats = ["shots",
+shot_stats = ["player","shots",
 "shots_on_target",
 "average_shot_distance",
 "xg_net"]
@@ -75,7 +75,7 @@ shot_stats = ["shots",
 
 pass_site = "https://fbref.com/en/comps/9/2023-2024/passing/2023-2024-Premier-League-Stats"
 pass_id = "stats_passing"
-pass_stats = ["passes_completed",
+pass_stats = ["player","passes_completed",
 "passes",
 "passes_total_distance",
 "passes_progressive_distance",
@@ -94,7 +94,7 @@ pass_stats = ["passes_completed",
 
 pt_site = "https://fbref.com/en/comps/9/2023-2024/passing_types/2023-2024-Premier-League-Stats"
 pt_id = "stats_passing_types"
-pt_stats = ["passes_live",
+pt_stats = ["player","passes_live",
 "passes_dead",
 "passes_free_kicks",
 "through_balls",
@@ -112,7 +112,7 @@ pt_stats = ["passes_live",
 
 gca_site = "https://fbref.com/en/comps/9/2023-2024/gca/2023-2024-Premier-League-Stats"
 gca_id = "stats_gca"
-gca_stats = ["sca",
+gca_stats = ["player","sca",
 "sca_passes_live",
 "sca_passes_dead",
 "sca_take_ons",
@@ -147,7 +147,7 @@ def_stats = ["tackles",
 
 poss_site = "https://fbref.com/en/comps/9/2023-2024/possession/2023-2024-Premier-League-Stats"
 poss_id = "stats_possession"
-poss_stats = ["touches_def_pen_area",
+poss_stats = ["player","touches_def_pen_area",
 "touches_def_3rd",
 "touches_mid_3rd",
 "touches_att_3rd",
@@ -168,7 +168,7 @@ poss_stats = ["touches_def_pen_area",
 
 time_site = "https://fbref.com/en/comps/9/2023-2024/playingtime/2023-2024-Premier-League-Stats"
 time_id = "stats_playing_time"
-time_stats = ["games_complete",
+time_stats = ["player","games_complete",
 "games_subs",
 "unused_subs",
 "points_per_game",
@@ -181,7 +181,7 @@ time_stats = ["games_complete",
 
 misc_site = "https://fbref.com/en/comps/9/2023-2024/misc/2023-2024-Premier-League-Stats"
 misc_id = "stats_misc"
-misc_stats = ["cards_yellow_red",
+misc_stats = ["player","cards_yellow_red",
 "fouls",
 "fouled",
 "offsides",
@@ -197,31 +197,41 @@ years = ["2017-2018","2018-2019","2019-2020","2020-2021","2021-2022","2022-2023"
 tableNames = ["stats","shooting","gca","passing","passing_types","possession", "defense","playingtime","misc","keepers","keepersadv"]
 
 
+# Starts a new weddriver window and puts in the site
 driver = webdriver.Firefox()
-driver.get(misc_site)
+driver.get(goal_site)
 
 
 
-
-# rk = driver.find_element(By.CLASS_NAME,'ranker')
-table = driver.find_element(By.ID, misc_id)
+# Traverses through the html from player table => tbody => table rows
+table = driver.find_element(By.ID, goal_id)
 bod = table.find_element(By.CSS_SELECTOR, "tbody")
 trs = bod.find_elements(By.CSS_SELECTOR, "tr")
 
-
+# Go through each of the table tr tags
 for row in trs:
+    # If the tag has the "thead" class it is not the data we want
     if row.get_attribute("class") == 'thead':
         continue
+
+    # Create a list of each td tag to iterate through
     data = row.find_elements(By.CSS_SELECTOR, "td")
-    print('row')
+    pd = []
+
     for d in data:
-        print(d.get_attribute("data-stat"))
-    # for thing in row:
-    #     print(thing.text)
+        # Check to see 
+        if d.get_attribute("data-stat") not in goal_stats:
+            # print("passed")
+            continue
+        elif d.text == '':
+            # print("Empty")
+            pd.append("0")
+        else:
+            pd.append(d.text)
+    print(pd)
 
     
 
-    # print(row.text)
 
 
 
