@@ -1,239 +1,99 @@
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
-stand_site = "https://fbref.com/en/comps/9/2023-2024/stats/2023-2024-Premier-League-Stats"
-stand_id = "stats_standard"
-standard_stats = ["player",
-"nationality",
-"position",
-"team",
-"age",
-"games",
-"games_starts",
-"minutes",
-"minutes_90s",
-"goals",
-"assists",
-"pens_made",
-"pens_att",
-"cards_yellow",
-"cards_red",
-"xg",
-"npxg",
-"xg_assist",
-"progressive_carries",
-"progressive_passes",
-"progressive_passes_received"]
-
-
-goal_site = "https://fbref.com/en/comps/9/2023-2024/keepers/2023-2024-Premier-League-Stats"
-goal_id = "stats_keeper"
-goal_stats = ["player","gk_goals_against",
-"gk_shots_on_target_against",
-"gk_saves",
-"gk_wins",
-"gk_ties",
-"gk_losses",
-"gk_clean_sheets",
-"gk_pens_att",
-"gk_pens_allowed",
-"gk_pens_saved",
-"gk_pens_missed"]
+from data_class import SiteStats
+import web_stuff as wb
+import csv
+import os
 
 
 
-adgoal_site = "https://fbref.com/en/comps/9/2023-2024/keepersadv/2023-2024-Premier-League-Stats"
-adgoal_id = "stats_keeper_adv"
-adgoal_stats = ["player","gk_free_kick_goals_against",
-"gk_corner_kick_goals_against",
-"gk_psxg",
-"gk_psnpxg_per_shot_on_target_against",
-"gk_psxg_net",
-"gk_passes_completed_launched",
-"gk_passes_launched",
-"gk_passes",
-"gk_passes_throws",
-"gk_passes_length_avg",
-"gk_goal_kicks",
-"gk_goal_kick_length_avg",
-"gk_crosses",
-"gk_crosses_stopped",
-"gk_def_actions_outside_pen_area",
-"gk_avg_distance_def_actions"]
+def collectAllData():
 
-
-shot_site = "https://fbref.com/en/comps/9/2023-2024/shooting/2023-2024-Premier-League-Stats"
-shot_id = "stats_shooting"
-shot_stats = ["player","shots",
-"shots_on_target",
-"average_shot_distance",
-"xg_net"]
-
-
-pass_site = "https://fbref.com/en/comps/9/2023-2024/passing/2023-2024-Premier-League-Stats"
-pass_id = "stats_passing"
-pass_stats = ["player","passes_completed",
-"passes",
-"passes_total_distance",
-"passes_progressive_distance",
-"passes_completed_short",
-"passes_short",
-"passes_completed_medium",
-"passes_medium",
-"passes_completed_long",
-"passes_long",
-"pass_xa",
-"assisted_shots",
-"passes_into_final_third",
-"passes_into_penalty_area",
-"crosses_into_penalty_area"]
-
-
-pt_site = "https://fbref.com/en/comps/9/2023-2024/passing_types/2023-2024-Premier-League-Stats"
-pt_id = "stats_passing_types"
-pt_stats = ["player","passes_live",
-"passes_dead",
-"passes_free_kicks",
-"through_balls",
-"passes_switches",
-"crosses",
-"throw_ins",
-"corner_kicks",
-"corner_kicks_in",
-"corner_kicks_out",
-"corner_kicks_straight",
-"passes_completed",
-"passes_offsides",
-"passes_blocked"]
-
-
-gca_site = "https://fbref.com/en/comps/9/2023-2024/gca/2023-2024-Premier-League-Stats"
-gca_id = "stats_gca"
-gca_stats = ["player","sca",
-"sca_passes_live",
-"sca_passes_dead",
-"sca_take_ons",
-"sca_shots",
-"sca_fouled",
-"sca_defense",
-"gca",
-"gca_passes_live",
-"gca_passes_dead",
-"gca_take_ons",
-"gca_shots",
-"gca_fouled",
-"gca_defense"]
-
-
-def_site = "https://fbref.com/en/comps/9/2023-2024/defense/2023-2024-Premier-League-Stats"
-def_id = "stats_defense"
-def_stats = ["tackles",
-"tackles_won",
-"tackles_def_3rd",
-"tackles_mid_3rd",
-"tackles_att_3rd",
-"challenge_tackles",
-"challenges",
-"challenges_lost",
-"blocked_shots",
-"blocked_passes",
-"interceptions",
-"clearances",
-"errors"]
-
-
-poss_site = "https://fbref.com/en/comps/9/2023-2024/possession/2023-2024-Premier-League-Stats"
-poss_id = "stats_possession"
-poss_stats = ["player","touches_def_pen_area",
-"touches_def_3rd",
-"touches_mid_3rd",
-"touches_att_3rd",
-"touches_att_pen_area",
-"touches_live_ball",
-"take_ons",
-"take_ons_won",
-"take_ons_tackled",
-"carries",
-"carries_distance",
-"carries_progressive_distance",
-"carries_into_final_third",
-"carries_into_penalty_area",
-"miscontrols",
-"dispossessed",
-"passes_received"]
-
-
-time_site = "https://fbref.com/en/comps/9/2023-2024/playingtime/2023-2024-Premier-League-Stats"
-time_id = "stats_playing_time"
-time_stats = ["player","games_complete",
-"games_subs",
-"unused_subs",
-"points_per_game",
-"on_goals_for",
-"on_goals_against",
-"plus_minus_wowy",
-"on_xg_for",
-"on_xg_against"]
-
-
-misc_site = "https://fbref.com/en/comps/9/2023-2024/misc/2023-2024-Premier-League-Stats"
-misc_id = "stats_misc"
-misc_stats = ["player","cards_yellow_red",
-"fouls",
-"fouled",
-"offsides",
-"pens_won",
-"pens_conceded",
-"own_goals",
-"ball_recoveries",
-"aerials_won",
-"aerials_lost"]
-
-
-years = ["2017-2018","2018-2019","2019-2020","2020-2021","2021-2022","2022-2023","2023-2024"]
-tableNames = ["stats","shooting","gca","passing","passing_types","possession", "defense","playingtime","misc","keepers","keepersadv"]
-
-
-# Starts a new weddriver window and puts in the site
-driver = webdriver.Firefox()
-driver.get(goal_site)
-
-
-
-# Traverses through the html from player table => tbody => table rows
-table = driver.find_element(By.ID, goal_id)
-bod = table.find_element(By.CSS_SELECTOR, "tbody")
-trs = bod.find_elements(By.CSS_SELECTOR, "tr")
-
-# Go through each of the table tr tags
-for row in trs:
-    # If the tag has the "thead" class it is not the data we want
-    if row.get_attribute("class") == 'thead':
-        continue
-
-    # Create a list of each td tag to iterate through
-    data = row.find_elements(By.CSS_SELECTOR, "td")
-    pd = []
-
-    for d in data:
-        # Check to see 
-        if d.get_attribute("data-stat") not in goal_stats:
-            # print("passed")
-            continue
-        elif d.text == '':
-            # print("Empty")
-            pd.append("0")
-        else:
-            pd.append(d.text)
-    print(pd)
-
+    # import web table data
+    st = SiteStats()
     
 
+    for year in st.years: # Go through year list
+        # Initialize variables 
+        players = {}
+        count = 1
+        
+        # t = table
+        for t in st.tableNames.keys(): # Go through the different tables for each year
+
+            # When code breaks (it has multiple times):
+            # Grab names from standard table
+            if os.path.isfile(f"../data/{year}/{year}{"stats_standard"}.csv") and st.tableNames[t][0] == "stats_standard":
+
+                with open (f"../data/{year}/{year}{st.tableNames[t][0]}.csv", 'r', newline='') as file:
+                    # Open csv and create a reader
+                    read = csv.reader(file, delimiter=",")
+                    # Insert player names into dictionary
+                    for row in read:
+                        players[row[2]] = []
+                continue
+
+            # Skip all other tables that exist
+            elif os.path.isfile(f"../data/{year}/{year}{st.tableNames[t][0]}.csv"):
+                continue
+            
+            # format website link
+            site = "/".join(("https://fbref.com/en/comps/9",year, t,year+"-Premier-League-Stats"))
+            # Run the site and grab players from the table
+            data = wb.runSite(site, st.tableNames[t][0],st.tableNames[t][1])
+
+            # Open a new file 
+            with open(f"../data/{year}/{year}{st.tableNames[t][0]}.csv", "w", newline='') as csvfile:
+                writer = csv.writer(csvfile, delimiter=",")
+                # For each player in data collected
+                for p in data:
+                    # if not in dictionary, give id and add to dictionary
+                    if t == "stats":
+                        p.insert(1, int(f"1{year.split("-")[1]}{count:04d}"))
+                        players[p[2]] = p
+                        count += 1
+                        writer.writerow(p)
+                    # Add to list in dictionary if alredy there
+                    elif p[1] in players.keys():
+                        players[p[1]].extend(p[1:])
+
+                        # Write to csv to save
+                        writer.writerow(p[1:])
 
 
 
-print(len(trs))
-driver.close()
+def csvCompiler():
+    # data pulled for iterating
+    st = SiteStats()
+
+    for year in st.years:
+        # Create dictionary of players
+        players = {}
+
+        # t = table
+        for t in st.tableNames.keys():
+            # Open all csvs in a year and get the players for them
+            with open(f"../data/{year}/{year}{st.tableNames[t][0]}.csv", "r") as temp:
+                tr = csv.reader(temp, delimiter=",")
+                for row in tr:
+                    # Add all data from standard csv
+                    if t == "stats":
+                        players[row[2]] = row
+                    # Add data to other csvs based on name
+                    else:
+                        players[row[0]].extend(row[1:])
+
+        # Create new csv for full data and write players to csv
+        with open(f"../data/{year}/{year}full.csv", "w+", newline="") as full:
+            writer = csv.writer(full, delimiter=",")
+            for p in players.values():
+                writer.writerow(p)
+
+
+def addHeaders():
+
+
+
+
+
+# collectAllData()
+# csvCompiler()
+# addHeaders()
