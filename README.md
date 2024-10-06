@@ -1,3 +1,5 @@
 # Program for Pulling Premier League Stats
 
-Full dataset done, will write out later
+All players needed for project are now in **data**.
+
+Next step is to work on pulling transfermarket values and add headers to data files
