@@ -2,8 +2,8 @@ from data_class import SiteStats
 import web_stuff as wb
 import csv
 import os
-
-
+import numpy as np
+import pandas as pd
 
 def collectAllData():
 
@@ -21,7 +21,7 @@ def collectAllData():
 
             # When code breaks (it has multiple times):
             # Grab names from standard table
-            if os.path.isfile(f"../data/{year}/{year}{"stats_standard"}.csv") and st.tableNames[t][0] == "stats_standard":
+            if os.path.isfile(f"../data/{year}/{year}stats_standard.csv") and st.tableNames[t][0] == "stats_standard":
 
                 with open (f"../data/{year}/{year}{st.tableNames[t][0]}.csv", 'r', newline='') as file:
                     # Open csv and create a reader
@@ -47,7 +47,8 @@ def collectAllData():
                 for p in data:
                     # if not in dictionary, give id and add to dictionary
                     if t == "stats":
-                        p.insert(1, int(f"1{year.split("-")[1]}{count:04d}"))
+                        y = year.split("-")[1]
+                        p.insert(1, int(f"1{y}{count:04d}"))
                         players[p[2]] = p
                         count += 1
                         writer.writerow(p)
@@ -85,15 +86,23 @@ def csvCompiler():
         with open(f"../data/{year}/{year}full.csv", "w+", newline="") as full:
             writer = csv.writer(full, delimiter=",")
             for p in players.values():
-                writer.writerow(p)
+                if len(p) != 146:
+                    # If not a goalie, append zeros
+                    p.extend(np.zeros(147-len(p)))
+                    writer.writerow(p)
+                else:
+                    writer.writerow(p)
 
 
 def addHeaders():
+    st = SiteStats()
 
-
+    for year in st.years:
+        df = pd.read_csv(f'..\\data\\{year}\\{year}full.csv', header=None)
+        df.to_csv(f'..\\data\\{year}\\{year}full2.csv', header=st.header, index=False)
 
 
 
 # collectAllData()
 # csvCompiler()
-# addHeaders()
+addHeaders()

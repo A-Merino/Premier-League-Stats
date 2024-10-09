@@ -1,10 +1,8 @@
-import csv
-players = {}
-year = "2017-2018"
-g = "stats_standard"
-with open (f"../data/{year}/{year}{g}.csv", 'r', newline='') as file:
-    read = csv.reader(file, delimiter=",")
-    for row in read:
-        players[row[2]] = row
+import re
+import json
+import numpy as np
 
-print(players)
+p = [1,2,3]
+p.extend(np.zeros(3))
+# print(p.extend(list(np.zeros(2))))
+print(p)
