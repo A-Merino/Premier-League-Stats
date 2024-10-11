@@ -105,4 +105,4 @@ def addHeaders():
 
 # collectAllData()
 # csvCompiler()
-addHeaders()
+# addHeaders()

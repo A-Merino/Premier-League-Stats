@@ -342,5 +342,5 @@ class SiteStats:
         "gk_crosses",
         "gk_crosses_stopped",
         "gk_def_actions_outside_pen_area",
-        "gk_avg_distance_def_actions"]
+        "gk_avg_distance_def_actions", "value_millions"]
 
