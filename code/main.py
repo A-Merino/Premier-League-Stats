@@ -106,3 +106,10 @@ def addHeaders():
 # collectAllData()
 # csvCompiler()
 # addHeaders()
+
+
+
+def rans():
+    print(np.random.random([3,3])*4 - 2)
+
+rans()
